@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binga! — Scarica il gioco</title>
+  <meta name="description" content="Binga! è il gioco da fare in due, dal vivo: riempi la griglia, chiama i numeri a voce, chiudi 5 linee per primo.">
+  <meta name="theme-color" content="#FD5E1D">
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lilita+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #FE9100;
+      --flame: #FD5E1D;
+      --magenta: #F8007A;
+      --navy: #1E1F5C;
+      --cream: #FFF5E1;
+      --ink: #4A2570;
+      --sky: #BFE6FF;
+      --white: #FFFFFF;
+      --green: #43A047;
+      --blue: #1E88E5;
+      --radius: 22px;
+      --gap: 16px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Fredoka', system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255,238,88,.55) 0 5px, transparent 6px),
+        radial-gradient(circle at 82% 8%, rgba(41,182,246,.7) 0 6px, transparent 7px),
+        radial-gradient(circle at 70% 30%, rgba(255,255,255,.7) 0 4px, transparent 5px),
+        radial-gradient(circle at 8% 45%, rgba(102,187,106,.7) 0 6px, transparent 7px),
+        radial-gradient(circle at 92% 55%, rgba(171,71,188,.7) 0 5px, transparent 6px),
+        radial-gradient(circle at 20% 80%, rgba(236,64,122,.7) 0 6px, transparent 7px),
+        radial-gradient(circle at 85% 88%, rgba(255,238,88,.7) 0 5px, transparent 6px),
+        linear-gradient(180deg, var(--orange) 0%, var(--flame) 45%, var(--magenta) 100%);
+      background-attachment: fixed;
+    }
+    main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+
+    /* Titolo */
+    .hero { text-align: center; padding: 8px 0 24px; }
+    .hero img {
+      width: 120px; height: 120px; border-radius: 28px;
+      border: 4px solid var(--navy); box-shadow: 0 6px 0 var(--navy);
+      animation: bounce 2.4s ease-in-out infinite;
+    }
+    h1, h2 { font-family: 'Lilita One', 'Fredoka', sans-serif; font-weight: 400; margin: 0; }
+    .title {
+      font-size: clamp(56px, 16vw, 96px); line-height: 1; margin-top: 16px;
+      color: var(--white);
+      -webkit-text-stroke: 3px var(--navy); paint-order: stroke fill;
+      text-shadow: 0 6px 0 var(--navy);
+    }
+    .tagline { color: var(--white); font-size: 20px; font-weight: 600; margin: 12px 0 24px; text-shadow: 0 2px 0 rgba(30,31,92,.35); }
+
+    /* Pulsanti 3D */
+    .buttons { display: flex; gap: var(--gap); justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-width: 200px; padding: 14px 24px;
+      font: 700 19px/1.1 'Fredoka', sans-serif; text-transform: uppercase; letter-spacing: .5px;
+      color: var(--white); text-decoration: none;
+      border: 3px solid var(--navy); border-radius: 18px;
+      box-shadow: 0 6px 0 var(--navy);
+      transition: transform .08s ease, box-shadow .08s ease;
+      cursor: pointer;
+    }
+    .btn:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--navy); }
+    .btn:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+    .btn svg { width: 24px; height: 24px; flex: none; }
+    .btn.android { background: var(--green); }
+    .btn.ios { background: var(--blue); }
+    .btn.big { min-width: min(100%, 320px); font-size: 21px; padding: 16px 28px; }
+
+    /* Pannelli */
+    .panel {
+      background: var(--cream);
+      border: 4px solid var(--navy); border-radius: var(--radius);
+      box-shadow: 0 8px 0 var(--navy);
+      padding: 24px 20px; margin-top: 32px;
+    }
+    .panel h2 { font-size: 30px; color: var(--navy); display: flex; align-items: center; gap: 10px; }
+    .panel h2 svg { width: 32px; height: 32px; }
+    .panel p { font-size: 17px; line-height: 1.5; margin: 12px 0; }
+    .cta { text-align: center; margin: 20px 0 8px; }
+    .small { font-size: 14px; opacity: .8; text-align: center; }
+    ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 20px 0 0; }
+    ol.steps li {
+      counter-increment: s; position: relative;
+      padding: 4px 0 14px 52px; font-size: 17px; line-height: 1.45;
+    }
+    ol.steps li::before {
+      content: counter(s);
+      position: absolute; left: 0; top: 0;
+      width: 38px; height: 38px; border-radius: 50%;
+      display: grid; place-items: center;
+      font: 400 20px 'Lilita One', sans-serif; color: var(--white);
+      background: var(--flame); border: 3px solid var(--navy);
+    }
+    b { color: var(--navy); }
+    .note {
+      background: rgba(30,31,92,.07); border-radius: 14px;
+      padding: 12px 14px; font-size: 15px; line-height: 1.45; margin-top: 8px;
+    }
+    .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+    .rule { background: var(--white); border: 3px solid var(--navy); border-radius: 16px; padding: 12px; text-align: center; }
+    .rule .n { font: 400 28px 'Lilita One', sans-serif; color: var(--flame); }
+    .rule p { margin: 4px 0 0; font-size: 15px; }
+    footer { text-align: center; color: var(--white); margin-top: 32px; font-size: 14px; opacity: .9; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero img { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <img src="icon.png" alt="Icona di Binga!" width="120" height="120">
+    <h1 class="title">Binga!</h1>
+    <p class="tagline">Riempi la griglia, chiama i numeri a voce, chiudi 5 linee per primo.</p>
+    <div class="buttons">
+      <a class="btn android" href="#android">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22A11.5 11.5 0 0 0 12 8.12c-1.8 0-3.5.38-4.92 1.02L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
+        Android
+      </a>
+      <a class="btn ios" href="#iphone">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31a4.05 4.05 0 0 0-3.18-1.72c-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.87-.76a4.25 4.25 0 0 0-3.59 2.18c-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.05 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.14a9.4 9.4 0 0 0 1.2-2.47 3.84 3.84 0 0 1-2.29-3.52zM14.2 6.13A3.85 3.85 0 0 0 15.1 3.3a3.9 3.9 0 0 0-2.55 1.32 3.65 3.65 0 0 0-.92 2.73 3.23 3.23 0 0 0 2.57-1.22z"/></svg>
+        iPhone
+      </a>
+    </div>
+  </header>
+
+  <section class="panel" id="android">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="#43A047" aria-hidden="true"><path d="M17.6 9.48l1.84-3.18a.38.38 0 0 0-.66-.38l-1.86 3.22A11.5 11.5 0 0 0 12 8.12c-1.8 0-3.5.38-4.92 1.02L5.22 5.92a.38.38 0 0 0-.66.38L6.4 9.48A10.8 10.8 0 0 0 1 18h22a10.8 10.8 0 0 0-5.4-8.52zM7 15.25a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5zm10 0a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5z"/></svg>
+      Android
+    </h2>
+    <p>Binga! non è sul Play Store: si installa direttamente dal file APK. Ci vuole un minuto.</p>
+    <div class="cta">
+      <a class="btn android big" href="https://github.com/ranzariccardo/binga-download/releases/latest/download/binga.apk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        Scarica l'APK
+      </a>
+    </div>
+    <p class="small">Apri questa pagina dal telefono Android su cui vuoi installare il gioco.</p>
+    <ol class="steps">
+      <li>Tocca <b>Scarica l'APK</b>. Se Chrome chiede conferma, tocca <b>Scarica comunque</b>.</li>
+      <li>A download finito tocca <b>Apri</b> nella notifica (oppure apri <b>binga.apk</b> dalla cartella Download).</li>
+      <li>La prima volta Android blocca l'installazione: tocca <b>Impostazioni</b> e attiva <b>Consenti da questa fonte</b> per Chrome (o per l'app con cui hai aperto il file), poi torna indietro.</li>
+      <li>Tocca <b>Installa</b>. Se compare Play Protect, tocca <b>Altri dettagli → Installa comunque</b>: succede con tutte le app che non vengono dal Play Store.</li>
+      <li>Apri <b>Binga!</b> dalla schermata Home, scegli nickname e colore e sei pronto.</li>
+    </ol>
+    <div class="note"><b>Aggiornamenti:</b> quando esce una versione nuova basta riscaricare l'APK da qui e installarlo sopra: profilo e partite restano.</div>
+  </section>
+
+  <section class="panel" id="iphone">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="#1E88E5" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31a4.05 4.05 0 0 0-3.18-1.72c-1.35-.14-2.64.8-3.33.8-.69 0-1.74-.78-2.87-.76a4.25 4.25 0 0 0-3.59 2.18c-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.24 2.73 2.2 1.1-.05 1.51-.71 2.84-.71 1.32 0 1.7.71 2.86.69 1.18-.02 1.93-1.07 2.65-2.14a9.4 9.4 0 0 0 1.2-2.47 3.84 3.84 0 0 1-2.29-3.52zM14.2 6.13A3.85 3.85 0 0 0 15.1 3.3a3.9 3.9 0 0 0-2.55 1.32 3.65 3.65 0 0 0-.92 2.73 3.23 3.23 0 0 0 2.57-1.22z"/></svg>
+      iPhone
+    </h2>
+    <p>Su iPhone Binga! è un'app web: non si scarica niente, si aggiunge alla schermata Home e si apre a tutto schermo come un'app vera.</p>
+    <div class="cta">
+      <a class="btn ios big" href="https://binga-127ae.web.app">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l8 7-8 7"/></svg>
+        Apri Binga!
+      </a>
+    </div>
+    <ol class="steps">
+      <li>Tocca <b>Apri Binga!</b> e assicurati di essere in <b>Safari</b> (da altre app, tipo WhatsApp o Instagram, tocca prima «Apri in Safari»).</li>
+      <li>Tocca il pulsante <b>Condividi</b> (il quadrato con la freccia verso l'alto), in basso al centro o accanto alla barra degli indirizzi.</li>
+      <li>Scorri e tocca <b>Aggiungi alla schermata Home</b>, poi <b>Aggiungi</b> in alto a destra.</li>
+      <li>Apri <b>Binga!</b> dall'icona sulla Home: da lì in poi usa sempre l'icona, non Safari, così il profilo resta salvato.</li>
+    </ol>
+    <div class="note"><b>Funziona anche su Android e computer:</b> lo stesso link si apre in qualsiasi browser, se non vuoi installare l'APK.</div>
+  </section>
+
+  <section class="panel" id="regole">
+    <h2>Come si gioca</h2>
+    <div class="rules">
+      <div class="rule"><div class="n">1</div><p>Uno crea la stanza e manda il codice all'altro.</p></div>
+      <div class="rule"><div class="n">2</div><p>Ognuno riempie la sua griglia con i numeri da 1 a 25.</p></div>
+      <div class="rule"><div class="n">3</div><p>A turno chiami un numero a voce e lo tocchi; l'altro lo tocca sulla sua.</p></div>
+      <div class="rule"><div class="n">4</div><p>Ogni linea chiusa vale una lettera: chi fa BINGA per primo vince!</p></div>
+    </div>
+    <p class="small" style="margin-top:16px">Nessuno con cui giocare? Tocca <b>Gioca contro il telefono</b>.</p>
+  </section>
+
+  <footer>Binga! · fatto per giocare insieme, dal vivo</footer>
+</main>
+</body>
+</html>
